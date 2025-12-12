@@ -4,10 +4,9 @@
 from __future__ import unicode_literals, absolute_import, division, print_function
 
 import gevent.monkey
+gevent.monkey.patch_all()  # Patch before importing any other modules
 
 from getproxy import github_api
-
-gevent.monkey.patch_all()
 
 import os
 import sys
