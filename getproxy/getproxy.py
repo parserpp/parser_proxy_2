@@ -266,15 +266,32 @@ class GetProxy(object):
         logger.info("process over. tproxyinfo=======>\n%s" % str(len(tproxyinfo)))
         logger.info("process over. tproxyinfo=======>\n%s" % str(len(dbjson)))
         if (self.github_goken != "") and (self.github_goken != None):
-            github_api.update_content("parserpp", "ip_ports", "/proxyinfo.json"
-                                      , _token=self.github_goken
-                                      , _content_not_base64=jproxyinfo)
-            github_api.update_content("parserpp", "ip_ports", "/proxyinfo.txt"
-                                      , _token=self.github_goken
-                                      , _content_not_base64=tproxyinfo)
-            github_api.update_content("parserpp", "ip_ports", "/db.json"
-                                      , _token=self.github_goken
-                                      , _content_not_base64=json.dumps(dbjson))
+            try:
+                logger.info("[*] Uploading proxyinfo.json to GitHub...")
+                github_api.update_content("parserpp", "ip_ports", "/proxyinfo.json"
+                                          , _token=self.github_goken
+                                          , _content_not_base64=jproxyinfo)
+                logger.info("[*] Successfully uploaded proxyinfo.json")
+            except Exception as e:
+                logger.error(f"[-] Failed to upload proxyinfo.json: {e}")
+
+            try:
+                logger.info("[*] Uploading proxyinfo.txt to GitHub...")
+                github_api.update_content("parserpp", "ip_ports", "/proxyinfo.txt"
+                                          , _token=self.github_goken
+                                          , _content_not_base64=tproxyinfo)
+                logger.info("[*] Successfully uploaded proxyinfo.txt")
+            except Exception as e:
+                logger.error(f"[-] Failed to upload proxyinfo.txt: {e}")
+
+            try:
+                logger.info("[*] Uploading db.json to GitHub...")
+                github_api.update_content("parserpp", "ip_ports", "/db.json"
+                                          , _token=self.github_goken
+                                          , _content_not_base64=json.dumps(dbjson))
+                logger.info("[*] Successfully uploaded db.json")
+            except Exception as e:
+                logger.error(f"[-] Failed to upload db.json: {e}")
 
     def start(self):
         self.init()
