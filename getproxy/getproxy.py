@@ -154,8 +154,12 @@ class GetProxy(object):
         signal.signal(signal.SIGINT, self._request_stop)
         signal.signal(signal.SIGTERM, self._request_stop)
 
-        rp = requests.get('http://httpbin.org/get')
-        self.origin_ip = rp.json().get('origin', '')
+        try:
+            rp = requests.get('http://httpbin.org/get', timeout=10)
+            self.origin_ip = rp.json().get('origin', 'unknown')
+        except Exception as e:
+            logger.warning(f"[-] Failed to get origin IP: {e}")
+            self.origin_ip = 'unknown'
         logger.info("[*] Current Ip Address: %s" % self.origin_ip)
 
         self.geoip_reader = geoip2.database.Reader(os.path.join(self.base_dir, 'data/GeoLite2-Country.mmdb'))
